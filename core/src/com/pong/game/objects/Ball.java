@@ -43,42 +43,25 @@ public class Ball {
 		pos.x += speedX;
 		pos.y += speedY;
 
-		// Collision with upper&&bottom bounds of window
+		// Handle collision
 		// Up
 		if (pos.y + speedY + sprite.getHeight() > Gdx.graphics.getHeight()) {
-			while (pos.y + Math.signum(speedY) + sprite.getHeight() < Gdx.graphics
-					.getHeight()) {
-				pos.y += Math.signum(speedY);
-			}
-			speedY = -speedY;
-
+			if(Math.abs(speedY) == speedY)
+				speedY = -speedY;
 		}
 		// Down
-		else if (pos.y + speedY + sprite.getHeight() < 0) {
-			while (pos.y - Math.signum(speedY) - sprite.getHeight() < 0) {
-				pos.y -= Math.signum(speedY);
-			}
-
-			speedY = -speedY;
+		else if (pos.y - speedY - sprite.getHeight() < 0) {
+			if(Math.abs(speedY) != speedY)
+				speedY = -speedY;
 		}
-
-		// Collision with walls left&&right
+		
 		// Right
 		if (pos.x + speedX + sprite.getWidth() > Gdx.graphics.getWidth()) {
-			while (pos.x + Math.signum(speedX) + sprite.getWidth() < Gdx.graphics
-					.getWidth()) {
-				pos.x += Math.signum(speedX);
-			}
-
 			GDXPong.setScore(1);
 			resetBall(2);
 		}
 		// Left
 		else if (pos.x + speedX + sprite.getWidth() < 0) {
-			while (pos.x - Math.signum(speedX) - sprite.getWidth() < 0) {
-				pos.x -= Math.signum(speedX);
-			}
-
 			GDXPong.setScore(2);
 			resetBall(1);
 		}
@@ -88,14 +71,15 @@ public class Ball {
 		if (bounds.overlaps(p1.getBounds())) {
 			if (Math.abs(speedX) != speedX) {
 				speedX = -speedX;
+				System.out.println("--> hit p1");
 			}
-			System.out.println("--> hit p1");
 		} else if (bounds.overlaps(p2.getBounds())) {
 			if (Math.abs(speedX) == speedX) {
 				speedX = -speedX;
+				System.out.println("--> hit p2");
 			}
-			System.out.println("--> hit p2");
 		}
+		
 	}
 
 	private void resetBall(int i) {
