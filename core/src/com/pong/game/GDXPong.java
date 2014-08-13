@@ -68,6 +68,7 @@ public class GDXPong extends ApplicationAdapter {
 		p1.render(batch);
 		p2.render(batch);
 		
+		
 		// Midlane
 		sr.setColor(midlane_color);
 		sr.rect(Gdx.graphics.getWidth()/2 - midlane_width/2, 0, midlane_width, Gdx.graphics.getHeight());
@@ -78,8 +79,11 @@ public class GDXPong extends ApplicationAdapter {
 	}
 
 	private void renderScore() {
-		fnt_score.draw(batch, ""+p1score, Gdx.graphics.getWidth()/2 - "0000".length()*32, Gdx.graphics.getHeight() - Gdx.graphics.getHeight()/32);
-		fnt_score.draw(batch, ""+p2score, Gdx.graphics.getWidth()/2 + "0000".length()*32, Gdx.graphics.getHeight() - Gdx.graphics.getHeight()/32);
+		String txt1 = ""+p1score;
+		String txt2 = ""+p2score;
+		
+		fnt_score.draw(batch, txt1, Gdx.graphics.getWidth()/2 - fnt_score.getBounds(txt1).width*5 - fnt_score.getBounds(txt1).width, Gdx.graphics.getHeight() - Gdx.graphics.getHeight()/32);
+		fnt_score.draw(batch, txt2, Gdx.graphics.getWidth()/2 + fnt_score.getBounds(txt2).width*5, Gdx.graphics.getHeight() - Gdx.graphics.getHeight()/32);
 	}
 	
 	public static void setScore(int toPlayer){
