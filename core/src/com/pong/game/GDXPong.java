@@ -2,15 +2,22 @@ package com.pong.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.pong.game.objects.Ball;
 import com.pong.game.objects.Player;
 
 public class GDXPong extends ApplicationAdapter {
 	// FIELDS
+	private final float midlane_width = 4;
+	private final Color midlane_color = new Color(1, 1, 1, 0.1f);
+	
 	private SpriteBatch batch;
+	private ShapeRenderer sr;
 	private BitmapFont fnt_score;
 	
 	private Player p1, p2;
@@ -21,6 +28,7 @@ public class GDXPong extends ApplicationAdapter {
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
+		sr = new ShapeRenderer();
 		
 		p1 = new Player(1);
 		p2 = new Player(2);
@@ -36,10 +44,15 @@ public class GDXPong extends ApplicationAdapter {
 	public void render() {
 		Gdx.gl.glClearColor(0f, 0f, 0.15f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		sr.begin(ShapeType.Filled);
 		batch.begin();
+		
 		update();
 		rnder();
+		
 		batch.end();
+		sr.end();
 	}
 
 	// Update sequence
@@ -55,6 +68,10 @@ public class GDXPong extends ApplicationAdapter {
 		p1.render(batch);
 		p2.render(batch);
 		
+		// Midlane
+		sr.setColor(midlane_color);
+		sr.rect(Gdx.graphics.getWidth()/2 - midlane_width/2, 0, midlane_width, Gdx.graphics.getHeight());
+
 		ball.render(batch);
 		
 		renderScore();
