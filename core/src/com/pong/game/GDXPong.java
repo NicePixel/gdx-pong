@@ -50,15 +50,23 @@ public class GDXPong extends ApplicationAdapter {
 		Gdx.gl.glClearColor(bg_R, bg_G, bg_B, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		updateBackground();
-		
+
+		// Draw shapes here:
 		sr.begin(ShapeType.Filled);
+		
+		// Mid-line
+		sr.setColor(midlane_color);
+		sr.rect(Gdx.graphics.getWidth()/2 - midlane_width/2, 0, midlane_width, Gdx.graphics.getHeight());
+		
+		sr.end();
+		
+		// Draw other stuff here:
 		batch.begin();
 		
 		update();
 		rnder();
 		
 		batch.end();
-		sr.end();
 	}
 
 	// Update sequence
@@ -74,13 +82,8 @@ public class GDXPong extends ApplicationAdapter {
 		p1.render(batch);
 		p2.render(batch);
 		
-		// Midlane
-		sr.setColor(midlane_color);
-		sr.rect(Gdx.graphics.getWidth()/2 - midlane_width/2, 0, midlane_width, Gdx.graphics.getHeight());
-
-		ball.render(batch);
-		
 		renderScore();
+		ball.render(batch);
 	}
 
 	private void renderScore() {
