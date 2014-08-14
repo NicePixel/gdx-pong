@@ -106,18 +106,29 @@ public class Ball {
 	}
 	
 	private void speedUp(Rectangle colliderBounds, Rectangle bounds){
+		System.out.println("--> Speed up!");
+		
+		// Speed up X
 		speedX += (speedX > 0?1:-1) * 0.2f;
 		speedX = -speedX;
-		speedY += (colliderBounds.y + colliderBounds.getHeight()/2 < pos.y ? Math.signum(speedY):0f );
 		
-		System.out.println("--> hit");
-		rotationSpeed = -rotationSpeed;
+		// Speed up Y
+		if(colliderBounds.y + colliderBounds.getHeight()/3 > pos.y){
+			speedY *= Math.signum(speedY)*-1;
+			rotationSpeed = -rotationSpeed;
+		}else if(colliderBounds.y + (colliderBounds.getHeight() - colliderBounds.getHeight()/3f) < pos.y){
+			speedY *= Math.signum(speedY)*1;
+			rotationSpeed = -rotationSpeed;
+		}else{
+			// Nothing here
+		}
+		speedY*=1.1f;
 	}
 	
 	private void resetBall(int win) {
 		
 		speedX_init = rand.nextFloat()*4 + 2.5f;
-		speedY_init = rand.nextFloat()*4 + 1.5f;
+		speedY_init = rand.nextFloat()*2 + 1.5f;
 		
 		if(win == 2){ // player 1 won
 			if(speedX_init == Math.abs(speedX_init)){

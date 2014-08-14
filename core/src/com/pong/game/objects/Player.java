@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Player {
 	// FIELDS
-	private final float speed = 9;
+	private final float speed = 9f;
 	private Vector2 pos; // The position
 	private Sprite sprite; // The sprite
 	
@@ -71,16 +71,16 @@ public class Player {
 		}
 
 		if (move + pos.y + sprite.getHeight() > Gdx.graphics.getHeight()) {
-			while (pos.y + Math.signum(move) + sprite.getHeight() < Gdx.graphics
-					.getHeight())
-				pos.y += Math.signum(move);
-			move = 0;
+			while (pos.y + 1 + sprite.getHeight() < Gdx.graphics.getHeight()){
+				pos.y += 1;
+			}
+			move = 0f;
 		} else if (move + pos.y < 0) {
-			while (Math.signum(move) - pos.y > 0)
-				pos.y -= Math.signum(move);
-			move = 0;
+			while (-1 + pos.y > 0){
+				pos.y -= 1;
+			}
+			move = 0f;
 		}
-
 		pos.y += move;
 		
 		bounds.set(pos.x, pos.y, sprite.getWidth(), sprite.getHeight());
