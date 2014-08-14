@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.pong.game.GDXPong;
 
 public class Player {
 	// FIELDS
@@ -28,6 +29,7 @@ public class Player {
 		// Set the visuals
 		sprite = new Sprite(new Texture(Gdx.files.internal("paddle.png")));
 		sprite.setSize(sprite.getTexture().getWidth(), sprite.getTexture().getHeight());
+		sprite.setColor(GDXPong.color_theme);
 		
 		// Set stuff that effects which player we are working with
 		switch(side){

@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -13,8 +14,10 @@ import com.pong.game.objects.Player;
 
 public class GDXPong extends ApplicationAdapter {
 	// FIELDS
-	private final float midlane_width = 4;
-	private final Color midlane_color = new Color(1, 1, 1, 1f);
+	public static final Color color_theme = new Color(1, 1, 1, 1);
+	
+	private final float midlane_thickness = 4;
+	private final float edgeLine_thickness = 2;
 	
 	private float bg_R, bg_G, bg_B;
 	private float bg_phase = 0.005f; // bg_max holds max value of R/G/B
@@ -29,6 +32,8 @@ public class GDXPong extends ApplicationAdapter {
 	private static int p1score;
 	private static int p2score;
 	private Ball ball;
+	
+	private OrthographicCamera cam;
 
 	@Override
 	public void create() {
@@ -43,6 +48,11 @@ public class GDXPong extends ApplicationAdapter {
 		p2score = 0;
 		
 		fnt_score = new BitmapFont(Gdx.files.internal("score.fnt"));
+		fnt_score.setColor(color_theme);
+	
+		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		cam.position.set(cam.position.x + Gdx.graphics.getWidth()/2, cam.position.y + Gdx.graphics.getHeight()/2, 0);
+		cam.update();
 	}
 
 	@Override
@@ -55,13 +65,16 @@ public class GDXPong extends ApplicationAdapter {
 		sr.begin(ShapeType.Filled);
 		
 		// Mid-line
-		sr.setColor(midlane_color);
-		sr.rect(Gdx.graphics.getWidth()/2 - midlane_width/2, 0, midlane_width, Gdx.graphics.getHeight());
+		sr.setColor(color_theme);
+		sr.rect(Gdx.graphics.getWidth()/2 - midlane_thickness/2, 0, midlane_thickness, Gdx.graphics.getHeight());
+		sr.rect(0, 0, Gdx.graphics.getWidth(), 2);
+		sr.rect(0, Gdx.graphics.getHeight()-edgeLine_thickness, Gdx.graphics.getWidth(), edgeLine_thickness);
 		
 		sr.end();
 		
 		// Draw other stuff here:
 		batch.begin();
+		batch.setProjectionMatrix(cam.combined);
 		
 		update();
 		rnder();

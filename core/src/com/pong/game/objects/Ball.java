@@ -3,7 +3,9 @@ package com.pong.game.objects;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -29,13 +31,26 @@ public class Ball {
 
 	private Rectangle bounds;
 
+	// TODO: Make sounds play at a random pitch
+	private final Sound snd_hit;
+	private final Sound snd_score;
+	
+	private boolean runEffect = false;
+	private ParticleEffect effect;
+
 	// Constructor
 	public Ball() {
 		rand = new Random();
 		
+		effect = new ParticleEffect();
+		effect.load(Gdx.files.internal("scorePart.p"), Gdx.files.internal(""));
+		effect.start();
+		effect.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
+		
 		// Set the visuals
 		sprite = new Sprite(new Texture(Gdx.files.internal("ball.png")));
 		sprite.setSize(16, 16);
+		sprite.setColor(GDXPong.color_theme);
 		
 		pos = new Vector2(Gdx.graphics.getWidth() / 2 - sprite.getWidth() / 2,
 				Gdx.graphics.getHeight() / 2 - sprite.getHeight() / 2);
@@ -47,6 +62,10 @@ public class Ball {
 		
 		// Start the ball!
 		resetBall(rand.nextInt(2));
+		
+		// Set the sounds
+		snd_hit = Gdx.audio.newSound(Gdx.files.internal("hit.ogg"));
+		snd_score = Gdx.audio.newSound(Gdx.files.internal("score.ogg"));
 	}
 
 	// Render method
@@ -54,6 +73,16 @@ public class Ball {
 		sprite.setRotation(rotation);
 		sprite.setPosition(pos.x, pos.y);
 		sprite.draw(batch);
+		
+		if(runEffect){
+			effect.update(Gdx.graphics.getDeltaTime());
+			effect.draw(batch);
+			if(effect.isComplete()){
+				runEffect = false;
+				effect.reset();
+			}
+		}
+		
 	}
 
 	// Update method
@@ -79,11 +108,13 @@ public class Ball {
 			
 			// Right
 			if (pos.x + speedX + sprite.getWidth()/2 > Gdx.graphics.getWidth()) {
+				snd_score.play();
 				GDXPong.setScore(1);
 				resetBall(1);
 			}
 			// Left
 			else if (pos.x + speedX + sprite.getWidth()/2 < 0) {
+				snd_score.play();
 				GDXPong.setScore(2);
 				resetBall(2);
 			}
@@ -93,10 +124,12 @@ public class Ball {
 			// Handle collision with players
 			if (bounds.overlaps(p1.getBounds())) {
 				if (Math.abs(speedX) != speedX) {
+					snd_hit.play();
 					speedUp(p1.getBounds(), bounds);
 				}
 			} else if (bounds.overlaps(p2.getBounds())) {
 				if (Math.abs(speedX) == speedX) {
+					snd_hit.play();
 					speedUp(p2.getBounds(), bounds);
 				}
 			}
@@ -127,7 +160,9 @@ public class Ball {
 	
 	private void resetBall(int win) {
 		
-		speedX_init = rand.nextFloat()*4 + 2.5f;
+		runEffect = true; // Star particles
+		
+		speedX_init = rand.nextFloat()*6 + 5.5f;
 		speedY_init = rand.nextFloat()*2 + 1.5f;
 		
 		if(win == 2){ // player 1 won
@@ -151,5 +186,9 @@ public class Ball {
 	
 	public boolean isOnCooldown(){
 		return (currentBallCooldown < ballCooldown);
+	}
+
+	public Vector2 getPos() {
+		return pos;
 	}
 }
