@@ -16,6 +16,11 @@ public class GDXPong extends ApplicationAdapter {
 	private final float midlane_width = 4;
 	private final Color midlane_color = new Color(1, 1, 1, 1f);
 	
+	private float bg_R, bg_G, bg_B;
+	private float bg_phase = 0.005f; // bg_max holds max value of R/G/B
+	public float bg_max = 0.3f; 
+	private int bg_state = 0;
+	
 	private SpriteBatch batch;
 	private ShapeRenderer sr;
 	private BitmapFont fnt_score;
@@ -42,8 +47,9 @@ public class GDXPong extends ApplicationAdapter {
 
 	@Override
 	public void render() {
-		Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
+		Gdx.gl.glClearColor(bg_R, bg_G, bg_B, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		updateBackground();
 		
 		sr.begin(ShapeType.Filled);
 		batch.begin();
@@ -67,7 +73,6 @@ public class GDXPong extends ApplicationAdapter {
 	public void rnder() {
 		p1.render(batch);
 		p2.render(batch);
-		
 		
 		// Midlane
 		sr.setColor(midlane_color);
@@ -99,4 +104,52 @@ public class GDXPong extends ApplicationAdapter {
 			break;
 		}
 	}
+	
+	public void updateBackground(){
+		
+		if(ball.isOnCooldown()){
+			if(bg_max != 0.3f){
+				bg_max = 0.3f;
+				bg_phase /= 2;
+			}
+		}else{
+			if(bg_max != 0.6f){
+				bg_max = 0.6f;
+				bg_phase *= 2;
+			}
+		}
+		
+		switch(bg_state){
+		case 0:
+			bg_R += bg_phase ;
+			if(bg_R >= bg_max) bg_state = 1;
+			break;
+		case 1:
+			bg_B += bg_phase;
+			if(bg_B >= bg_max) bg_state = 2;
+			break;
+		case 2:
+			bg_R -= bg_phase;
+			if(bg_R <= 0) bg_state = 3;
+			break;
+		case 3:
+			bg_G += bg_phase;
+			if(bg_G >= bg_max) bg_state = 4;
+			break;
+		case 4:
+			bg_B -= bg_phase;
+			if(bg_B <= 0) bg_state = 5;
+			break;
+		case 5:
+			bg_R += bg_phase;
+			if(bg_R >= bg_max) bg_state = 6;
+			break;
+		case 6:
+			bg_G -= bg_phase;
+			if(bg_G <= 0) bg_state = 0;
+			break;
+		}
+		
+	}
+	
 }

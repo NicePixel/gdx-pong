@@ -41,6 +41,8 @@ public class Ball {
 		
 		rotation = 0f;
 		rotationSpeed = 2f;
+		
+		resetBall();
 	}
 
 	// Render method
@@ -55,7 +57,7 @@ public class Ball {
 		if(currentBallCooldown < ballCooldown){
 			currentBallCooldown += Gdx.graphics.getDeltaTime();
 		}else{
-
+			
 			pos.x += speedX;
 			pos.y += speedY;
 			
@@ -112,10 +114,15 @@ public class Ball {
 	}
 
 	private void resetBall() {
+		
+		rotation = 0;
 		currentBallCooldown = 0f;
-
 		pos = new Vector2(Gdx.graphics.getWidth() / 2 - sprite.getWidth()/2,
 				Gdx.graphics.getHeight() / 2 - sprite.getHeight()/2);
 
+	}
+	
+	public boolean isOnCooldown(){
+		return (currentBallCooldown < ballCooldown);
 	}
 }
