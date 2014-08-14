@@ -36,7 +36,6 @@ public class Ball {
 		// Set the visuals
 		sprite = new Sprite(new Texture(Gdx.files.internal("ball.png")));
 		sprite.setSize(16, 16);
-//		sprite.setOriginCenter();
 		
 		pos = new Vector2(Gdx.graphics.getWidth() / 2 - sprite.getWidth() / 2,
 				Gdx.graphics.getHeight() / 2 - sprite.getHeight() / 2);
@@ -46,7 +45,8 @@ public class Ball {
 		rotation = 0f;
 		rotationSpeed = 2f;
 		
-		resetBall();
+		// Start the ball!
+		resetBall(rand.nextInt(2));
 	}
 
 	// Render method
@@ -80,12 +80,12 @@ public class Ball {
 			// Right
 			if (pos.x + speedX + sprite.getWidth()/2 > Gdx.graphics.getWidth()) {
 				GDXPong.setScore(1);
-				resetBall();
+				resetBall(1);
 			}
 			// Left
 			else if (pos.x + speedX + sprite.getWidth()/2 < 0) {
 				GDXPong.setScore(2);
-				resetBall();
+				resetBall(2);
 			}
 			
 			bounds.set(pos.x, pos.y, sprite.getWidth(), sprite.getHeight());
@@ -105,14 +105,6 @@ public class Ball {
 		}
 	}
 	
-//	private void speedUp(){
-//		speedX += (speedX > 0?1:-1) * 0.2f;
-//		speedX = -speedX;
-//		
-//		System.out.println("--> hit");
-//		rotationSpeed = -rotationSpeed;
-//	}
-	
 	private void speedUp(Rectangle colliderBounds, Rectangle bounds){
 		speedX += (speedX > 0?1:-1) * 0.2f;
 		speedX = -speedX;
@@ -122,10 +114,20 @@ public class Ball {
 		rotationSpeed = -rotationSpeed;
 	}
 	
-	private void resetBall() {
-
+	private void resetBall(int win) {
+		
 		speedX_init = rand.nextFloat()*4 + 2.5f;
 		speedY_init = rand.nextFloat()*4 + 1.5f;
+		
+		if(win == 2){ // player 1 won
+			if(speedX_init == Math.abs(speedX_init)){
+				speedX_init = - speedX_init;
+			}
+		}else if(win == 2){ // player 1 won
+			if(speedX_init != Math.abs(speedX_init)){
+				speedX_init = Math.abs(speedX_init);
+			}
+		}
 		speedX = speedX_init;
 		speedY = speedY_init;
 		
