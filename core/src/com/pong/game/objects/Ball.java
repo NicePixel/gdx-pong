@@ -1,5 +1,7 @@
 package com.pong.game.objects;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -10,10 +12,11 @@ import com.pong.game.GDXPong;
 
 public class Ball {
 	// FIELDS
-	private final float speedX_init = 6; // Ball's initial X speed
-	private final float speedY_init = 6; // Ball's initial Y speed
-	private float speedX = speedX_init;
-	private float speedY = speedY_init;
+	private Random rand;
+	private float speedX_init; // Ball's initial X speed
+	private float speedY_init; // Ball's initial Y speed
+	private float speedX;
+	private float speedY;
 	
 	private final float ballCooldown = 3f; // How much time ball _waits_ to be launched
 	private float currentBallCooldown = 0f; // How much time ball _waited_ to be launched
@@ -28,7 +31,8 @@ public class Ball {
 
 	// Constructor
 	public Ball() {
-
+		rand = new Random();
+		
 		// Set the visuals
 		sprite = new Sprite(new Texture(Gdx.files.internal("ball.png")));
 		sprite.setSize(16, 16);
@@ -63,7 +67,7 @@ public class Ball {
 			
 			// Handle collision
 			// Up
-			if (pos.y + speedY + sprite.getHeight()/2 > Gdx.graphics.getHeight()) {
+			if (pos.y + speedY + sprite.getHeight() > Gdx.graphics.getHeight()) {
 				if(Math.abs(speedY) == speedY)
 					speedY = -speedY;
 			}
@@ -89,31 +93,41 @@ public class Ball {
 			// Handle collision with players
 			if (bounds.overlaps(p1.getBounds())) {
 				if (Math.abs(speedX) != speedX) {
-					
-					speedX += (speedX > 0?1:-1) * 0.2f;
-					speedX = -speedX;
-					
-					System.out.println("--> hit p1");
-					rotationSpeed = -rotationSpeed;
-					
+					speedUp(p1.getBounds(), bounds);
 				}
 			} else if (bounds.overlaps(p2.getBounds())) {
 				if (Math.abs(speedX) == speedX) {
-					
-					speedX += (speedX > 0?1:-1) * 0.2f;
-					speedX = -speedX;
-					
-					System.out.println("--> hit p2");
-					rotationSpeed = -rotationSpeed;
-					
+					speedUp(p2.getBounds(), bounds);
 				}
 			}
 			rotation += rotationSpeed;
 			
 		}
 	}
-
+	
+//	private void speedUp(){
+//		speedX += (speedX > 0?1:-1) * 0.2f;
+//		speedX = -speedX;
+//		
+//		System.out.println("--> hit");
+//		rotationSpeed = -rotationSpeed;
+//	}
+	
+	private void speedUp(Rectangle colliderBounds, Rectangle bounds){
+		speedX += (speedX > 0?1:-1) * 0.2f;
+		speedX = -speedX;
+		speedY += (colliderBounds.y + colliderBounds.getHeight()/2 < pos.y ? Math.signum(speedY):0f );
+		
+		System.out.println("--> hit");
+		rotationSpeed = -rotationSpeed;
+	}
+	
 	private void resetBall() {
+
+		speedX_init = rand.nextFloat()*4 + 2.5f;
+		speedY_init = rand.nextFloat()*4 + 1.5f;
+		speedX = speedX_init;
+		speedY = speedY_init;
 		
 		rotation = 0;
 		currentBallCooldown = 0f;
