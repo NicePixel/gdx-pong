@@ -14,7 +14,7 @@ import com.pong.game.objects.Player;
 public class GDXPong extends ApplicationAdapter {
 	// FIELDS
 	private final float midlane_width = 4;
-	private final Color midlane_color = new Color(1, 1, 1, 0.1f);
+	private final Color midlane_color = new Color(1, 1, 1, 1f);
 	
 	private SpriteBatch batch;
 	private ShapeRenderer sr;
@@ -42,7 +42,7 @@ public class GDXPong extends ApplicationAdapter {
 
 	@Override
 	public void render() {
-		Gdx.gl.glClearColor(0f, 0f, 0.15f, 1f);
+		Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		sr.begin(ShapeType.Filled);

@@ -25,7 +25,11 @@ public class Player {
 	/** side: 1: left :: 2: right */
 	public Player(int side) {
 		
-		// Set the keys
+		// Set the visuals
+		sprite = new Sprite(new Texture(Gdx.files.internal("paddle.png")));
+		sprite.setSize(sprite.getTexture().getWidth(), sprite.getTexture().getHeight());
+		
+		// Set stuff that effects which player we are working with
 		switch(side){
 		case 1:
 			k_up = Keys.W;
@@ -34,6 +38,7 @@ public class Player {
 		case 2:
 			k_up = Keys.UP;
 			k_down = Keys.DOWN;
+			sprite.setScale(-1, 1);
 			break;
 		default:
 			System.out.println("Uknown side, using player 1!");
@@ -41,10 +46,6 @@ public class Player {
 			k_down = Keys.S;
 			break;
 		}
-
-		// Set the visuals
-		sprite = new Sprite(new Texture(Gdx.files.internal("paddle.png")));
-		sprite.setSize(16, 64);
 		
 		pos = new Vector2((side==1?offsetX:Gdx.graphics.getWidth()-sprite.getWidth() - offsetX), 0);
 		bounds = new Rectangle();
