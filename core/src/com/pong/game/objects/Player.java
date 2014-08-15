@@ -18,6 +18,8 @@ public class Player {
 	private final int k_up;
 	private final int k_down;
 	
+	private int side;
+	
 	private Rectangle bounds;
 	
 	private final float offsetX = (float) Math.pow(2, 6);
@@ -25,6 +27,7 @@ public class Player {
 	// Constructor
 	/** side: 1: left :: 2: right */
 	public Player(int side) {
+		this.side = side;
 		
 		// Set the visuals
 		sprite = new Sprite(new Texture(Gdx.files.internal("paddle.png")));
@@ -49,7 +52,7 @@ public class Player {
 			break;
 		}
 		
-		pos = new Vector2((side==1?offsetX:Gdx.graphics.getWidth()-sprite.getWidth() - offsetX), 0);
+		pos = new Vector2((side==1?offsetX:Gdx.graphics.getWidth()-sprite.getWidth() - offsetX), Gdx.graphics.getHeight()/2 - sprite.getHeight()/2);
 		bounds = new Rectangle();
 	}
 
@@ -63,10 +66,14 @@ public class Player {
 	public void update() {
 		// Handle movement
 		float move = 0f;
+		
+		float touchY = Math.abs(Gdx.input.getY() - Gdx.graphics.getHeight());
+		System.out.println(touchY + " " + pos.y);
+		float touchX = Gdx.input.getX();
 
-		if (Gdx.input.isKeyPressed(k_up)) {
+		if (Gdx.input.isKeyPressed(k_up) || (Gdx.input.isTouched() && touchY != pos.y && touchY-sprite.getHeight()/2 > pos.y+sprite.getHeight()/2 && (side==1?touchX<=Gdx.graphics.getWidth()/2:touchX>Gdx.graphics.getWidth()/2))) {
 			move = speed;
-		} else if (Gdx.input.isKeyPressed(k_down)) {
+		} else if (Gdx.input.isKeyPressed(k_down) || (Gdx.input.isTouched() && touchY != pos.y && touchY+sprite.getHeight()/2 < pos.y+sprite.getHeight()/2 && (side==1?touchX<=Gdx.graphics.getWidth()/2:touchX>Gdx.graphics.getWidth()/2))) {
 			move = -speed;
 		} else {
 			move = 0f;
