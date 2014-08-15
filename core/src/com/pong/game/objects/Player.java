@@ -11,7 +11,7 @@ import com.pong.game.GDXPong;
 
 public class Player {
 	// FIELDS
-	private final float speed = 9f;
+	private final float speed = 14f;
 	private Vector2 pos; // The position
 	private Sprite sprite; // The sprite
 	
@@ -67,16 +67,21 @@ public class Player {
 		// Handle movement
 		float move = 0f;
 		
-		float touchY = Math.abs(Gdx.input.getY() - Gdx.graphics.getHeight());
-		System.out.println(touchY + " " + pos.y);
-		float touchX = Gdx.input.getX();
-
-		if (Gdx.input.isKeyPressed(k_up) || (Gdx.input.isTouched() && touchY != pos.y && touchY-sprite.getHeight()/2 > pos.y+sprite.getHeight()/2 && (side==1?touchX<=Gdx.graphics.getWidth()/2:touchX>Gdx.graphics.getWidth()/2))) {
-			move = speed;
-		} else if (Gdx.input.isKeyPressed(k_down) || (Gdx.input.isTouched() && touchY != pos.y && touchY+sprite.getHeight()/2 < pos.y+sprite.getHeight()/2 && (side==1?touchX<=Gdx.graphics.getWidth()/2:touchX>Gdx.graphics.getWidth()/2))) {
-			move = -speed;
-		} else {
-			move = 0f;
+		boolean doneMovement = false;
+		for(int i = 0; i < 2; i++){
+			if(doneMovement == false){
+				float touchY = Math.abs(Gdx.input.getY(i) - Gdx.graphics.getHeight());
+				float touchX = Gdx.input.getX(i);
+				if (Gdx.input.isKeyPressed(k_up) || (Gdx.input.isTouched(i) && touchY-sprite.getHeight()/2 > pos.y+sprite.getHeight()/2 && (side==1?touchX<=Gdx.graphics.getWidth()/2:touchX>Gdx.graphics.getWidth()/2))) {
+					move = speed;
+					doneMovement = true;
+				} else if (Gdx.input.isKeyPressed(k_down) || (Gdx.input.isTouched(i) && touchY+sprite.getHeight()/2 < pos.y+sprite.getHeight()/2 && (side==1?touchX<=Gdx.graphics.getWidth()/2:touchX>Gdx.graphics.getWidth()/2))) {
+					move = -speed;
+					doneMovement = true;
+				} else {
+					move = 0f;
+				}
+			}
 		}
 
 		if (move + pos.y + sprite.getHeight() > Gdx.graphics.getHeight()) {
